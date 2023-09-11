@@ -1,0 +1,97 @@
+version: '2'
+# docker-compose -f docker-compose.dev.yml up
+
+
+services:
+  ctfd_llmv:
+    # LLMV: Change Dockerfile to development version.
+    container_name: ctfd_llmv_complete
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: root
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./config_template/ctfd/.env
+      
+    volumes:
+      - ./.data/CTFd/logs:/var/log/CTFd
+      - ./.data/CTFd/uploads:/var/uploads
+    depends_on:
+      - db
+      - llm_router
+      - cache
+    networks:
+        default:
+        internal:
+
+  nginx:
+    image: nginx:stable
+    restart: always
+    volumes:
+      - ./config_template/nginx/http.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    depends_on:
+      - ctfd_llmv
+
+  llm_router:
+    image: aivillage/llm_router:dev
+    user: root
+    restart: always
+    volumes:
+      - ./config_template/llm_router/chat/:/opt/models/chat/:ro
+    env_file:
+      - ./config_template/llm_router/.env
+    depends_on:
+      - cache
+    networks:
+        internal:
+    healthcheck:
+      test: ["CMD", "curl","-f","http://localhost:8000/health"]
+      start_period: 1s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+
+  db:
+    image: mariadb:10.4.12
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=ctfd
+      - MYSQL_USER=ctfd
+      - MYSQL_PASSWORD=ctfd
+      - MYSQL_DATABASE=ctfd
+    volumes:
+      - ./.data/mysql:/var/lib/mysql
+    networks:
+        internal:
+    # This command is required to set important mariadb defaults
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 1s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+
+  cache:
+    image: redis:4
+    restart: always
+    volumes:
+    - ./.data/redis:/data
+    networks:
+        internal:
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      start_period: 1s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+
+networks:
+    default:
+    internal:
+        internal: true
