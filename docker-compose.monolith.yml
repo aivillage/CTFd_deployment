@@ -14,11 +14,11 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - ../config_template/ctfd/.env
-      - ../config_template/ctfd/llmv_monolith.env
+      - ./config/ctfd/.env
+      - ./config/ctfd/llmv_monolith.env
     volumes:
-      - ../.data/CTFd/logs:/var/log/CTFd
-      - ../.data/CTFd/uploads:/var/uploads
+      - ./.data/CTFd/logs:/var/log/CTFd
+      - ./.data/CTFd/uploads:/var/uploads
     depends_on:
       - db
       - llm_router
@@ -31,7 +31,7 @@ services:
     image: nginx:stable
     restart: always
     volumes:
-      - ../config_template/nginx/http.conf:/etc/nginx/nginx.conf
+      - ./config/ctfd_nginx/http.conf:/etc/nginx/nginx.conf
     ports:
       - 80:80
     depends_on:
@@ -42,9 +42,9 @@ services:
     user: root
     restart: always
     volumes:
-      - ../config_template/llm_router/chat/:/opt/models/chat/:ro
+      - ./config/llm_router/chat/:/opt/models/chat/:ro
     env_file:
-      - ../config_template/llm_router/.env
+      - ./config/llm_router/.env
     depends_on:
       - cache
     networks:
@@ -65,7 +65,7 @@ services:
       - MYSQL_PASSWORD=ctfd
       - MYSQL_DATABASE=ctfd
     volumes:
-      - ../.data/mysql:/var/lib/mysql
+      - ./.data/mysql:/var/lib/mysql
     networks:
         internal:
     # This command is required to set important mariadb defaults
@@ -81,7 +81,7 @@ services:
     image: redis:4
     restart: always
     volumes:
-    - ../.data/redis:/data
+    - ./.data/redis:/data
     networks:
         internal:
     healthcheck:
