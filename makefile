@@ -8,4 +8,4 @@ setup: setup_plugin setup_theme
 	
 
 up:
-	docker compose -f docker-compose.dev.yml up --build
+	docker compose -f monolith/docker-compose.dev.yml up --build
