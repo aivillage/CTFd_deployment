@@ -11,4 +11,4 @@ setup_theme:
 setup: setup_plugin setup_theme config
 
 up:
-	docker compose -f monolith/docker-compose.dev.yml up --build
+	docker compose -f docker-compose.monolith.yml up --build

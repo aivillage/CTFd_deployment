@@ -14,8 +14,8 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - ./config/ctfd/.env
-      - ./config/ctfd/llmv_monolith.env
+      - ./config_template/ctfd/.env
+      - ./config_template/.env
     volumes:
       - ./.data/CTFd/logs:/var/log/CTFd
       - ./.data/CTFd/uploads:/var/uploads
@@ -44,7 +44,7 @@ services:
     volumes:
       - ./config/llm_router/chat/:/opt/models/chat/:ro
     env_file:
-      - ./config/llm_router/.env
+      - ./config_template/llm_router/.env
     depends_on:
       - cache
     networks:
