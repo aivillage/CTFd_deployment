@@ -7,7 +7,7 @@ services:
     # LLMV: Change Dockerfile to development version.
     container_name: ctfd_llmv_complete
     build:
-      context: ../
+      context: ./
       dockerfile: Dockerfile
     user: root
     restart: always
@@ -15,7 +15,6 @@ services:
       - "8000:8000"
     env_file:
       - ./config/ctfd/.env
-      - ./config/ctfd/llmv_monolith.env
     volumes:
       - ./.data/CTFd/logs:/var/log/CTFd
       - ./.data/CTFd/uploads:/var/uploads
