@@ -1,1 +1,0 @@
-This is where the other gits get cloned to during the CTFd image creation process.
