@@ -1,6 +1,10 @@
 # CTFd_deployment
 
-Run `make setup` to clone the repos you need for this. (todo: create a `make update` to run `git pull` in the repo directories). Then run `make up` to create a service with the correct theme and plugin with the monolith deployment. This is a dev instance, you should customize the environment variables in the newly created `config` to your needs.
+1. Run `make setup` to clone the repos you need for this and create the config directory
+2. Add your keys into `config/llm_router/.env_keys`
+2. Then run `make up` to create a service with the correct theme and plugin with the monolith deployment. 
+
+This is a dev instance, you should customize the environment variables in the newly created `config` to your needs.
 
 # Monolith Deployment
 
