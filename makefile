@@ -27,8 +27,14 @@ build_ctfd:
 	# For development delete old ctfd container and build a new one
 	# Preserve other containrs to speed things up and so we don't need to
 	# reinitialize users and challenges each time
+	# This is proably better for hot reloading just CTFd
+	# https://stackoverflow.com/questions/42529211/how-to-rebuild-and-update-a-container-without-downtime-with-docker-compose
+	# docker stop ctfd_llmv_complete
 	docker rm ctfd_llmv_complete
 	docker compose -f docker-compose.monolith.yml build ctfd_llmv
+
+clear_logs:
+	sudo rm -rf .data/CTFd/logs/llmv_verification.log
 
 clean:
 	rm -rf config gits/*
