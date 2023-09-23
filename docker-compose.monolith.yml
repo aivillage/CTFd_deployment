@@ -18,6 +18,7 @@ services:
     volumes:
       - ./.data/CTFd/logs:/var/log/CTFd
       - ./.data/CTFd/uploads:/var/uploads
+      - ./gits/llm_verification:/opt/CTFd/CTFd/plugins/llm_verification
     depends_on:
       - db
       - llm_router
