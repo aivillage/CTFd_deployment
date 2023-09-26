@@ -12,7 +12,7 @@ services:
     user: root
     restart: always
     ports:
-      - "8000:8000"
+      - 8000:8000
     env_file:
       - ./config/ctfd/.env
     volumes:
@@ -49,6 +49,11 @@ services:
       - cache
     networks:
         internal:
+    
+    # Disable this and port mapping below in prod environment
+        default:
+    ports:
+      - 8888:8000
     healthcheck:
       test: ["CMD", "curl","-f","http://localhost:8000/health"]
       start_period: 1s
